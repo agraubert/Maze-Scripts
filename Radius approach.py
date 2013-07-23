@@ -11,28 +11,32 @@ def seeker(file, character):
                 x=b
                 y=a
     return y,x
+counter=0
 
-def generateset(age, backfile, frontfile):
-    for a in range(len(backfile)):
-        for b in range(len(backfile[a])):
-            if(backfile[a][b]==str(age)):
-                if(frontfile[a-1][b]==" " or frontfile[a-1][b]=="X"): #up
-                    frontfile[a-1][b]="V"
-                    backfile[a-1][b]=str(age+1)
-                if(frontfile[a][b+1]==" " or frontfile[a][b+1]=="X"): #right
-                    frontfile[a][b+1]="<"
-                    backfile[a][b+1]=str(age+1)
-                if(frontfile[a+1][b]==" " or frontfile[a+1][b]=="X"): #down
-                    frontfile[a+1][b]="^"
-                    backfile[a+1][b]=str(age+1)
-                if(frontfile[a][b-1]==" " or frontfile[a][b-1]=="X"): #left
-                    frontfile[a][b-1]=">"
-                    backfile[a][b-1]=str(age+1)
-
+def generateset(age, locations, frontfile):
+    newlist=[]
+    global counter
+    for a in range(len(locations)):
+        counter+=1
+        if(frontfile[locations[a][0]-1][locations[a][1]]==" " or frontfile[locations[a][0]-1][locations[a][1]]=="X"): #up
+            frontfile[locations[a][0]-1][locations[a][1]]="V"
+            newlist.append([locations[a][0]-1, locations[a][1]])
+        if(frontfile[locations[a][0]][locations[a][1]+1]==" " or frontfile[locations[a][0]][locations[a][1]+1]=="X"): #right
+            frontfile[locations[a][0]][locations[a][1]+1]="<"
+            newlist.append([locations[a][0], locations[a][1]+1])
+        if(frontfile[locations[a][0]+1][locations[a][1]]==" " or frontfile[locations[a][0]+1][locations[a][1]]=="X"): #down
+            frontfile[locations[a][0]+1][locations[a][1]]="^"
+            newlist.append([locations[a][0]+1, locations[a][1]])
+        if(frontfile[locations[a][0]][locations[a][1]-1]==" " or frontfile[locations[a][0]][locations[a][1]-1]=="X"): #left
+            frontfile[locations[a][0]][locations[a][1]-1]=">"
+            newlist.append([locations[a][0], locations[a][1]-1])
+    #locations=[thing[:] for thing in newlist]
+    return newlist
+            
 maze_file = open(sys.argv[1], "r")
 mazebase = maze_file.readlines()
 mazebase=[toarray(line[:-1]) for line in mazebase]
-invisible=[thing[:] for thing in mazebase]
+#invisible=[thing[:] for thing in mazebase]
 finalmap=[thing[:] for thing in mazebase]
 startcoordinates = seeker(mazebase, "O")
 endcoordinates = seeker(mazebase, "X")
@@ -40,22 +44,20 @@ location=[startcoordinates[0], startcoordinates[1]]
 radius=0
 found=False
 br=False
-invisible[location[0]][location[1]]=str(0)
+#invisible[location[0]][location[1]]=str(0)
 print("Checking Path")
 maximum=(len(mazebase))
 maximum*=len(mazebase[0])
-while(not found):
+agelist=[]
+agelist.append([location[0], location[1]])
+while((not found) and len(agelist)>0):
     maxes=[]
-    generateset(radius, invisible, mazebase)
+    agelist=generateset(radius, agelist, mazebase)
     if(mazebase[endcoordinates[0]][endcoordinates[1]]!="X"):
         found=True
     radius+=1
-    if(radius>=3+maximum):
-        print("BROKEN")
-        br=True
-        break
-if(not br):
-    print("Solution found!")
+    
+print("Solution found!")
 location=[endcoordinates[0], endcoordinates[1]]
 while(location[0]!=startcoordinates[0] or location[1]!= startcoordinates[1]):
     direction=mazebase[location[0]][location[1]]
@@ -73,4 +75,5 @@ finalmap[startcoordinates[0]][startcoordinates[1]]="!"
 for a in range(len(finalmap)):
     print("".join(finalmap[a]))
 print("Length: ",radius)
+print(counter)
 input("")
