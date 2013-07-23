@@ -16,20 +16,19 @@ counter=0
 def generateset(age, locations, frontfile):
     newlist=[]
     global counter
-    for a in range(len(locations)):
-        counter+=1
-        if(frontfile[locations[a][0]-1][locations[a][1]]==" " or frontfile[locations[a][0]-1][locations[a][1]]=="X"): #up
-            frontfile[locations[a][0]-1][locations[a][1]]="V"
-            newlist.append([locations[a][0]-1, locations[a][1]])
-        if(frontfile[locations[a][0]][locations[a][1]+1]==" " or frontfile[locations[a][0]][locations[a][1]+1]=="X"): #right
-            frontfile[locations[a][0]][locations[a][1]+1]="<"
-            newlist.append([locations[a][0], locations[a][1]+1])
-        if(frontfile[locations[a][0]+1][locations[a][1]]==" " or frontfile[locations[a][0]+1][locations[a][1]]=="X"): #down
-            frontfile[locations[a][0]+1][locations[a][1]]="^"
-            newlist.append([locations[a][0]+1, locations[a][1]])
-        if(frontfile[locations[a][0]][locations[a][1]-1]==" " or frontfile[locations[a][0]][locations[a][1]-1]=="X"): #left
-            frontfile[locations[a][0]][locations[a][1]-1]=">"
-            newlist.append([locations[a][0], locations[a][1]-1])
+    counter+=1
+    if(frontfile[locations[0][0]-1][locations[0][1]]==" " or frontfile[locations[0][0]-1][locations[0][1]]=="X"): #up
+        frontfile[locations[0][0]-1][locations[0][1]]="V"
+        newlist.append([locations[0][0]-1, locations[0][1]])
+    if(frontfile[locations[0][0]][locations[0][1]+1]==" " or frontfile[locations[0][0]][locations[0][1]+1]=="X"): #right
+        frontfile[locations[0][0]][locations[0][1]+1]="<"
+        newlist.append([locations[0][0], locations[0][1]+1])
+    if(frontfile[locations[0][0]+1][locations[0][1]]==" " or frontfile[locations[0][0]+1][locations[0][1]]=="X"): #down
+        frontfile[locations[0][0]+1][locations[0][1]]="^"
+        newlist.append([locations[0][0]+1, locations[0][1]])
+    if(frontfile[locations[0][0]][locations[0][1]-1]==" " or frontfile[locations[0][0]][locations[0][1]-1]=="X"): #left
+        frontfile[locations[0][0]][locations[0][1]-1]=">"
+        newlist.append([locations[0][0], locations[0][1]-1])
     #locations=[thing[:] for thing in newlist]
     return newlist
             
@@ -52,7 +51,8 @@ agelist=[]
 agelist.append([location[0], location[1]])
 while((not found) and len(agelist)>0):
     maxes=[]
-    agelist=generateset(radius, agelist, mazebase)
+    agelist+=generateset(radius, agelist, mazebase)
+    agelist.pop(0)
     if(mazebase[endcoordinates[0]][endcoordinates[1]]!="X"):
         found=True
     radius+=1
