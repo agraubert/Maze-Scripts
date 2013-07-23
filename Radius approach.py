@@ -1,4 +1,5 @@
 import os
+import sys
 def toarray(string):
     return [a for a in string]
 
@@ -28,7 +29,7 @@ def generateset(age, backfile, frontfile):
                     frontfile[a][b-1]=">"
                     backfile[a][b-1]=str(age+1)
 
-maze_file = open("maze5.txt", "r")
+maze_file = open(sys.argv[1], "r")
 mazebase = maze_file.readlines()
 mazebase=[toarray(line[:-1]) for line in mazebase]
 invisible=[thing[:] for thing in mazebase]
